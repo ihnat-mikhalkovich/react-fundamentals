@@ -1,0 +1,50 @@
+@import 'src/styles/variables.scss';
+
+$card-box-shodow: 0 0 1vh rgba(0,0,0,0.5);
+$card-border-left: 5px solid $primary-color;
+
+.courseCard {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  margin: 3vh 0vh;
+  padding: 3vh;
+  border-left: $card-border-left;
+  border-radius: $border-radius;
+  box-shadow: $card-box-shodow;
+  .payload {
+    display: flex;
+    margin-top: 1vh;
+    p {
+      flex: 2;
+    }
+    .info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-left: 4vh;
+      ul {
+        margin-left: 0.5vh;
+        li span {
+          color: black;
+          font-weight: bold;
+        }
+      }
+      .buttons {
+        display: flex;
+        margin-top: 1vh;
+        button {
+          margin: 0vh 0.5vh;
+        }
+        button:has(svg) {
+          padding: 1vh;
+        }
+        svg {
+          fill: white;
+          height: $button-height / 2;
+        }
+      }
+    }
+  }
+}

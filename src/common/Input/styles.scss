@@ -1,0 +1,12 @@
+@import 'src/styles/variables.scss';
+
+input {
+    font-size: $main-font-size;
+    width: 40vh;
+    border-radius: $border-radius;
+    border: solid;
+    border-width: 2px;
+    height: calc(6vh - 4px);
+    border-color: rgba(128, 128, 128, 0.4);
+    text-indent: 2vh;
+}

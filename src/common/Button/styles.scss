@@ -1,0 +1,25 @@
+@import 'src/styles/variables.scss';
+
+button {
+  background-color: $primary-color;
+  border: none;
+  color: white;
+  text-align: center;
+  font-size: $main-font-size;
+  display: inline-block;
+  height: $button-height;
+  width: fit-content;
+  padding: 0 3vh;
+  border-radius: $border-radius;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+button:hover {
+  background-color: rgba($primary-color, 0.8);
+}
+
+button:active {
+  background-color: rgba($primary-color, 0.7);
+}
