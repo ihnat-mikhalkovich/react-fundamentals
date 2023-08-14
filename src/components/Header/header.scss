@@ -1,0 +1,33 @@
+@import 'src/styles/variables.scss';
+
+$logo-padding: 1vh 3vh;
+
+$username-color: gray;
+$username-font-weight: bold;
+
+$button-margin: 0vh 3vh;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  height: $header-height;
+  box-shadow: $header-box-shadow;
+  div:has(img) {
+    padding: $logo-padding;
+  }
+  span {
+    color: $username-color;
+    font: {
+      weight: $username-font-weight;
+      size: $main-font-size;
+    };
+  }
+  .navbar {
+    display: flex;
+    align-items: center;
+    button {
+      margin: $button-margin;
+    }
+  }
+}
