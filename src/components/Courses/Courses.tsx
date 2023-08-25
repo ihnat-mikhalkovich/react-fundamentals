@@ -1,28 +1,20 @@
 import React, { FC, useState } from 'react';
 import CourseCard from './components/CourseCard/CourseCard';
-import CourseInfo from '../CourseInfo/CourseInfo';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
 import './styles.scss';
-import {
-	ALERT_BUTTON_DONT_WORK,
-	BUTTON_VALUE_ADD_NEW_COURSE,
-	mockedCoursesList,
-} from 'src/constants';
+import { BUTTON_VALUE_ADD_NEW_COURSE, mockedCoursesList } from 'src/constants';
 import mapCoursesToCourseCardProps from './utils';
+import { useNavigate } from 'react-router-dom';
+import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
 
 const Courses: FC = () => {
-	const [course, setCourse] = useState(null);
 	const [search, setSearch] = useState('');
 	const [courses, setCourses] = useState(mockedCoursesList);
-	if (course) {
-		return (
-			<CourseInfo
-				{...course}
-				authors={course.authorsList.join(', ')}
-				onBackClick={() => setCourse(null)}
-			/>
-		);
+	const navigate = useNavigate();
+
+	if (!courses.length) {
+		return <EmptyCourseList />;
 	}
 
 	const handleSubmit = () => {
@@ -51,12 +43,15 @@ const Courses: FC = () => {
 				/>
 				<Button
 					value={BUTTON_VALUE_ADD_NEW_COURSE}
-					onClick={() => alert(ALERT_BUTTON_DONT_WORK)}
+					onClick={() => navigate('/courses/add')}
 				/>
 			</div>
 			<div className='cards'>
 				{mapCoursesToCourseCardProps(courses).map((c) => (
-					<CourseCard {...c} onShowCourseClick={() => setCourse(c)} />
+					<CourseCard
+						{...c}
+						onShowCourseClick={() => navigate(`/courses/${c.id}`)}
+					/>
 				))}
 			</div>
 		</div>

@@ -5,12 +5,34 @@ $primary-color: rgb(48, 112, 147);
 $main-font-size: 16px;
 $border-radius: 4.5px;
 $button-height: 6vh;
+$input-height: calc($button-height - 4px);
 
 * {
   margin: 0;
   padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
 }
 
 ul {
   list-style-type: none;
+}
+
+span.error {
+  color: red;
+}
+
+input.error {
+  border-color: red;
 }

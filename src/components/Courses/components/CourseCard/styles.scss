@@ -1,17 +1,17 @@
 @import 'src/styles/variables.scss';
 
-$card-box-shodow: 0 0 1vh rgba(0,0,0,0.5);
+$card-box-shadow: 0 0 1vh rgba(0,0,0,0.5);
 $card-border-left: 5px solid $primary-color;
 
 .courseCard {
   background-color: white;
   display: flex;
   flex-direction: column;
-  margin: 3vh 0vh;
+  margin: 3vh 0;
   padding: 3vh;
   border-left: $card-border-left;
   border-radius: $border-radius;
-  box-shadow: $card-box-shodow;
+  box-shadow: $card-box-shadow;
   .payload {
     display: flex;
     margin-top: 1vh;
@@ -42,7 +42,7 @@ $card-border-left: 5px solid $primary-color;
         }
         svg {
           fill: white;
-          height: $button-height / 2;
+          height: calc($button-height / 2);
         }
       }
     }

@@ -1,0 +1,9 @@
+@import 'src/styles/registration';
+
+.login-container {
+  @extend %registration-container;
+
+  .login {
+    @extend %registration;
+  }
+}

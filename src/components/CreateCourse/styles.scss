@@ -1,0 +1,84 @@
+@import 'src/styles/registration';
+@import 'src/styles/course-info';
+
+$unit-margin: 4vh;
+$topic-margin: 3vh;
+
+.course-container {
+  @extend %course-info-container;
+  display: flex;
+  .create-course-form {
+    @extend %multiple-inputs;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .main-info-container {
+      margin: 0;
+      div {
+        margin-top: $topic-margin;
+      }
+      .error-messages {
+        margin: 0;
+      }
+    }
+    input {
+      width: 100%;
+    }
+    .duration-and-authors {
+      margin-top: $unit-margin;
+      .input {
+        width: fit-content;
+        input {
+          width: 50vh;
+        }
+      }
+      .duration {
+        display: flex;
+        margin: 0;
+        .hours span {
+          font-weight: bold;
+        }
+        .duration-input {
+          margin: 0;
+          display: flex;
+          flex-direction: row;
+        }
+        span {
+          align-self: end;
+          margin-left: 1.5vh;
+          margin-bottom: calc($input-height / 2 - 2px);
+        }
+      }
+      .authors {
+        margin-top: $unit-margin;
+        .create-author {
+          display: flex;
+          button {
+            align-self: end;
+            margin-bottom: 4px;
+          }
+        }
+        .author-list {
+          margin-top: $topic-margin;
+          .author-item:first-child {
+            margin-top: 2vh;
+          }
+          .author-item {
+            margin: 0.5vh 0vh;
+            span {
+              margin-right: 2vh;
+            }
+          }
+        }
+      }
+    }
+  }
+  .buttons {
+    align-self: flex-end;
+    margin: 0;
+    display: flex;
+    button {
+      margin-left: 1.5vh;
+    }
+  }
+}

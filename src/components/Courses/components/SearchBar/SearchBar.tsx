@@ -1,7 +1,11 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import Button from 'src/common/Button/Button';
 import Input from 'src/common/Input/Input';
-import { BUTTON_VALUE_SEARCH, FORM_PLACEHOLDER } from 'src/constants';
+import {
+	BUTTON_VALUE_SEARCH,
+	FORM_PLACEHOLDER,
+	SEARCH_FORM_LABEL,
+} from 'src/constants';
 import './styles.scss';
 
 export interface SearchBarProps {
@@ -25,8 +29,10 @@ const SearchBar: FC<SearchBarProps> = (props: SearchBarProps) => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form className='search-bar' onSubmit={handleSubmit}>
 			<Input
+				type='search'
+				label={SEARCH_FORM_LABEL}
 				placeholder={FORM_PLACEHOLDER}
 				onChange={handleOnChange}
 				value={props.value}

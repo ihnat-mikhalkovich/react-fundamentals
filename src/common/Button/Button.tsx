@@ -3,7 +3,7 @@ import './styles.scss';
 
 export interface ButtonProps {
 	value: string | JSX.Element;
-	onClick: () => void;
+	onClick?: () => void;
 }
 
 const Button: FC<ButtonProps> = (props: ButtonProps) => (

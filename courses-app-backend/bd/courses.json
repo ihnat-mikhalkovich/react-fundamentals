@@ -1,1 +1,12 @@
-[{"title":"title","description":"description","creationDate":"9/3/2021","duration":30,"authors":["9b87e8b8-6ba5-40fc-a439-c4e30a373d36"],"id":"66cc289e-6de9-49b2-9ca7-8b4f409d6467"}]
+[
+  {
+    "title": "title",
+    "description": "description",
+    "creationDate": "9/3/2021",
+    "duration": 30,
+    "authors": [
+      "9b87e8b8-6ba5-40fc-a439-c4e30a373d36"
+    ],
+    "id": "66cc289e-6de9-49b2-9ca7-8b4f409d6467"
+  }
+,{"title":"string","description":"string","duration":20,"authors":["9b87e8b8-6ba5-40fc-a439-c4e30a373d36"],"creationDate":"23/08/2023","id":"92fe1fa0-b4ef-4373-a5a9-eeaf49579294"}]

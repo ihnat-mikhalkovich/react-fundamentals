@@ -1,12 +1,15 @@
 @import 'src/styles/variables.scss';
 
-.input {
-    input {
+.textarea {
+    textarea {
         font-size: $main-font-size;
-        width: 40vh;
         border-radius: $border-radius;
-        height: calc(6vh - 4px);
+        height: 15vh;
         border: 2px solid rgba(128, 128, 128, 0.4);
         text-indent: 2vh;
+        width: 100%;
+        max-width: 100%;
+        padding-top: 1.5vh;
+        margin: 0.5vh 0;
     }
 }

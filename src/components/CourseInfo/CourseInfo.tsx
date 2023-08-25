@@ -1,47 +1,59 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import Button from 'src/common/Button/Button';
 import { BUTTON_VALUE_BACK } from 'src/constants';
 import './styles.scss';
+import courseService, { Course } from '../../services/courseService';
+import { Link, useParams } from 'react-router-dom';
 
-export interface CourseInfoProps {
-	title: string;
-	description: string;
-	id: string;
-	duration: string;
-	creationDate: string;
-	authors: string;
-	onBackClick: () => void;
-}
+const courseInitState: Course = {
+	title: '',
+	description: '',
+	id: '',
+	duration: 0,
+	creationDate: '',
+	authors: [],
+};
 
-const CourseInfo: FC<CourseInfoProps> = (props: CourseInfoProps) => (
-	<div className='course-info-container'>
-		<h1>{props.title}</h1>
-		<div className='course-info'>
-			<div className='course-info-description'>
-				<h3>Description:</h3>
-				<p>{props.description}</p>
+const CourseInfo: FC = () => {
+	const { courseId } = useParams();
+	const [course, setCourse] = useState<Course>(courseInitState);
+	useEffect(() => {
+		courseService
+			.getCourseById(courseId)
+			.then((course) => setCourse(course))
+			.catch(() => alert('I cant give the page'));
+	}, []);
+	return (
+		<div className='course-info-container'>
+			<h1>{course.title}</h1>
+			<div className='course-info'>
+				<div className='course-info-description'>
+					<h3>Description:</h3>
+					<p>{course.description}</p>
+				</div>
+				<ul>
+					<li key='id'>
+						<span>ID: </span>
+						{course.id}
+					</li>
+					<li key='duration'>
+						<span>Duration: </span>
+						{course.duration}
+					</li>
+					<li key='creationDate'>
+						<span>Created: </span>
+						{course.creationDate}
+					</li>
+					<li key='authors'>
+						<span>Authors: </span>
+						{course.authors}
+					</li>
+				</ul>
 			</div>
-			<ul>
-				<li key='id'>
-					<span>ID: </span>
-					{props.id}
-				</li>
-				<li key='duration'>
-					<span>Duration: </span>
-					{props.duration}
-				</li>
-				<li key='creationDate'>
-					<span>Created: </span>
-					{props.creationDate}
-				</li>
-				<li key='authors'>
-					<span>Authors: </span>
-					{props.authors}
-				</li>
-			</ul>
+
+			<Button value={<Link to={'/courses'}>back</Link>} />
 		</div>
-		<Button onClick={props.onBackClick} value={BUTTON_VALUE_BACK} />
-	</div>
-);
+	);
+};
 
 export default CourseInfo;

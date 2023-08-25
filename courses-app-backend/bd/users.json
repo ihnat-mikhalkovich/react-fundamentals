@@ -7,10 +7,94 @@
     "id": "85aa767d-73c0-4e23-9a02-27902d418b37"
   },
   {
+    "name": "admin",
+    "email": "admin@nimda.com",
+    "password": "nimda1",
+    "role": "admin",
+    "id": "85aa767d-73c0-4e23-9a02-27902d418b38"
+  },
+  {
     "name": "Test User",
     "email": "user@email.com",
     "password": "user123",
     "role": "user",
     "id": "f1e5fd00-803f-4cc3-893c-37a88fc330fc"
+  },
+  {
+    "name": "test",
+    "email": "testtest@test.com",
+    "password": "test22",
+    "role": "user",
+    "id": "d02eccec-6fea-4ce7-a26d-d65b3a3b94e6"
+  },
+  {
+    "name": "test",
+    "email": "test@test.com",
+    "password": "testtest",
+    "role": "user",
+    "id": "dd2735c9-14da-4331-a732-7c3642906764"
+  },
+  {
+    "name": "mentoring",
+    "email": "mentoring@mail.com",
+    "password": "mentoring",
+    "role": "user",
+    "id": "c0437bf5-4135-4611-8c8b-eb3a2141971c"
+  },
+  {
+    "name": "mentoring",
+    "email": "mentoring1@mail.com",
+    "password": "mentoring",
+    "role": "user",
+    "id": "c9bff2d8-d9d2-490b-baab-fe905db941ab"
+  },
+  {
+    "name": "ksd;fj",
+    "email": "afasdf@dsf.com",
+    "password": "als;dkfja;slkdfj",
+    "role": "user",
+    "id": "5f71d6bc-8838-4e20-af8b-b040c9fa19f4"
+  },
+  {
+    "name": "sdfasf",
+    "email": "sdfs@asdf.com",
+    "password": "dkfas;dlfkj",
+    "role": "user",
+    "id": "6e4bce95-4bdc-4482-b5d5-1d69297be74b"
+  },
+  {
+    "name": "mantoringg",
+    "email": "mantoring@gmail.com",
+    "password": "mantoring@gmail.com",
+    "role": "user",
+    "id": "fab699cc-d08d-4167-bd84-aaf2a4bacfed"
+  },
+  {
+    "name": "sfsdfsdfasdf",
+    "email": "mantoringgg@gmail.com",
+    "password": "mantoring@gmail.com",
+    "role": "user",
+    "id": "1579255b-9eb3-45b6-899f-4db19024b0f1"
+  },
+  {
+    "name": "qwoyuroqwirywo",
+    "email": "mmantoring@gmail.com",
+    "password": "jsdfhsaljfh",
+    "role": "user",
+    "id": "d70b7d9a-12e8-423d-82c5-4e9dee63a48a"
+  },
+  {
+    "name": "qwoyuroqwirywo",
+    "email": "mmantorinfg@gmail.com",
+    "password": "jsdfhsaljfh",
+    "role": "user",
+    "id": "ef9e683b-2e9a-4c8e-b04c-502c1402cc03"
+  },
+  {
+    "name": "qwoyuroqwirywo",
+    "email": "mama@gmail.com",
+    "password": "mantoring@gmail.com",
+    "role": "user",
+    "id": "4ba8acfc-306a-4b7a-95fc-6e46b08f1aa7"
   }
 ]

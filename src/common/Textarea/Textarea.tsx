@@ -2,21 +2,19 @@ import React, { ChangeEvent, FC } from 'react';
 import './styles.scss';
 import { FORM_PLACEHOLDER } from '../../constants';
 
-export interface InputProps {
+export interface TextareaProps {
 	label: string;
 	value: string;
 	placeholder?: string;
-	onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+	onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 	className?: string;
-	type: string;
 }
 
-const Input: FC<InputProps> = (props: InputProps) => (
-	<div className='input'>
+const Input: FC<TextareaProps> = (props: TextareaProps) => (
+	<div className='textarea'>
 		<label htmlFor={props.label}>{props.label}</label>
-		<input
+		<textarea
 			id={props.label}
-			type={props.type}
 			value={props.value}
 			placeholder={props.placeholder ? props.placeholder : FORM_PLACEHOLDER}
 			onChange={props.onChange}
