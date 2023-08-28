@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInstance';
 import { AxiosInstance } from 'axios';
+import User from '../types/User';
 
 export interface RegistrationData {
 	name: string;
@@ -12,42 +13,42 @@ export interface LoginData {
 	password: string;
 }
 
-export interface User {
+export interface UserResponse {
 	email: string;
 	name: string;
 	role: string;
 }
 
 interface LoginResponse {
-	user: User;
+	user: UserResponse;
 	successful: boolean;
 	result: string;
 }
 
 interface MeResponse {
-	result: User;
+	result: UserResponse;
 }
 
 class UserService {
 	constructor(private axios: AxiosInstance) {}
+
 	async register(data: RegistrationData): Promise<boolean> {
 		await this.axios.post('/register', data);
 		return new Promise(() => true);
 	}
+
 	async login(data: LoginData): Promise<User> {
 		const response = await this.axios.post<LoginResponse>('/login', data);
 		const loginResponse = response.data;
-		if (loginResponse.successful) {
-			localStorage.setItem('token', loginResponse.result);
-			localStorage.setItem('username', loginResponse.user.name);
-		}
-		return loginResponse.user;
-	}
-	async logout(data: LoginData): Promise<boolean> {
-		return new Promise(() => true);
+		return {
+			email: loginResponse.user.email,
+			name: loginResponse.user.name,
+			token: loginResponse.result,
+			isAuth: true,
+		};
 	}
 
-	async me(): Promise<User> {
+	async me(): Promise<UserResponse> {
 		const response = await this.axios.get<MeResponse>('/users/me', {
 			headers: {
 				Authorization: localStorage.getItem('token'),

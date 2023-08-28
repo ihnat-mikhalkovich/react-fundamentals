@@ -25,6 +25,12 @@ class AuthorService {
 	async createAuthorBatch(authors: string[]): Promise<Author[]> {
 		return await Promise.all(authors.map((a) => this.createAuthor(a)));
 	}
+	async findAll(): Promise<Author[]> {
+		const response = await axiosInstance.get<AuthorResponse<Author[]>>(
+			'/authors/all'
+		);
+		return response.data.result;
+	}
 }
 
 export default new AuthorService(axiosInstance);

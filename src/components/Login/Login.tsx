@@ -14,6 +14,8 @@ import errorMessagesIfPresent from '../../helpers/errorMessagesIfPresent';
 import './styles.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../App';
+import { useDispatch } from 'react-redux';
+import { login } from '../../store/user/userSlice';
 
 interface LoginErrors {
 	email?: string[];
@@ -47,6 +49,7 @@ const onClick = (
 const Login: FC = () => {
 	const [formData, setFormData] = useState<LoginData>(loginDataInitState);
 	const [errors, setErrors] = useState<LoginErrors>(loginErrorsInitState);
+	const dispatch = useDispatch();
 
 	const authContext = useContext(AuthContext);
 
@@ -64,9 +67,19 @@ const Login: FC = () => {
 		if (!hasError) {
 			userService
 				.login(formData)
+				.then((user) => {
+					dispatch(login({ ...user }));
+					return user;
+				})
+				.then((user) => {
+					if (user.isAuth) {
+						localStorage.setItem('token', user.token);
+						localStorage.setItem('username', user.name);
+					}
+				})
 				.then(() => {
 					userService.me();
-					authContext.login();
+					authContext.onLoginClick();
 					navigate('/courses');
 				})
 				.catch((e) => {

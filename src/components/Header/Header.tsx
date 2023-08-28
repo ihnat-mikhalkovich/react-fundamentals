@@ -26,7 +26,7 @@ const redirectAfterLogin = (navigate: NavigateFunction): void =>
 	navigate('/login');
 
 const Header: FC = () => {
-	const { isUserAuthenticated, username, login, logout } =
+	const { isUserAuthenticated, username, onLogoutClick } =
 		useContext(AuthContext);
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -38,7 +38,7 @@ const Header: FC = () => {
 			<div className='navbar'>
 				{!isLoginOrRegistration(location.pathname) &&
 					(isUserAuthenticated
-						? userAuthenticatedHeader(username, logout)
+						? userAuthenticatedHeader(username, onLogoutClick)
 						: userNotAuthenticatedHeader(() => redirectAfterLogin(navigate)))}
 			</div>
 		</div>

@@ -1,9 +1,10 @@
 import React, { FC, useEffect, useState } from 'react';
 import Button from 'src/common/Button/Button';
-import { BUTTON_VALUE_BACK } from 'src/constants';
 import './styles.scss';
-import courseService, { Course } from '../../services/courseService';
+import courseService from '../../services/courseService';
 import { Link, useParams } from 'react-router-dom';
+import Course from '../../types/Course';
+import { BUTTON_VALUE_BACK } from '../../constants';
 
 const courseInitState: Course = {
 	title: '',
@@ -51,7 +52,7 @@ const CourseInfo: FC = () => {
 				</ul>
 			</div>
 
-			<Button value={<Link to={'/courses'}>back</Link>} />
+			<Button value={<Link to={'/courses'}>{BUTTON_VALUE_BACK}</Link>} />
 		</div>
 	);
 };
