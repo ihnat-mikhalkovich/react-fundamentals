@@ -1,13 +1,15 @@
 import './App.css';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useState } from 'react';
 import Header from './components/Header/Header';
 import { Outlet } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from './store/user/userSlice';
 
 interface AuthContextType {
 	isUserAuthenticated: boolean;
 	username: string;
-	login: () => void;
-	logout: () => void;
+	onLoginClick: () => void;
+	onLogoutClick: () => void;
 }
 
 const isUserLogged = () => !!localStorage.getItem('token');
@@ -15,8 +17,8 @@ const isUserLogged = () => !!localStorage.getItem('token');
 export const AuthContext = createContext<AuthContextType>({
 	isUserAuthenticated: false,
 	username: '',
-	login: () => console.log('init data'),
-	logout: () => console.log('init data'),
+	onLoginClick: () => console.log('init data'),
+	onLogoutClick: () => console.log('init data'),
 });
 
 const getUsername = () => localStorage.getItem('username');
@@ -24,18 +26,21 @@ const getUsername = () => localStorage.getItem('username');
 function App() {
 	const [isUserAuthenticated, setAuthenticated] = useState(isUserLogged());
 	const [username, setUsername] = useState(getUsername());
-	const logout = () => {
+	const dispatch = useDispatch();
+
+	const onLogoutClick = () => {
 		setAuthenticated(!isUserAuthenticated);
+		dispatch(logout());
 		localStorage.clear();
 	};
-	const login = () => {
+	const onLoginClick = () => {
 		setAuthenticated(true);
 		setUsername(getUsername());
 	};
 	return (
 		<div className='App'>
 			<AuthContext.Provider
-				value={{ isUserAuthenticated, username, login, logout }}
+				value={{ isUserAuthenticated, username, onLoginClick, onLogoutClick }}
 			>
 				<Header />
 				<div className={'container'}>

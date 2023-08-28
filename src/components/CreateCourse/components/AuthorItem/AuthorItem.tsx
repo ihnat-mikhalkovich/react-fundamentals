@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC } from 'react';
+import React, { FC } from 'react';
 import Button from '../../../../common/Button/Button';
 import { ReactComponent as DeleteIcon } from './delete.svg';
 import './styles.scss';

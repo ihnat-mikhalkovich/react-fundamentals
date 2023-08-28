@@ -12,6 +12,9 @@ import errorMessagesIfPresent from '../../helpers/errorMessagesIfPresent';
 import courseService from '../../services/courseService';
 import authorService from '../../services/authorService';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addCourse } from '../../store/courses/coursesSlice';
+import { addAuthor } from '../../store/authors/authorsSlice';
 
 interface CourseErrors {
 	title: string[];
@@ -40,6 +43,7 @@ const CreateCourse: FC = () => {
 	const [course, setCourse] = useState<Course>(courseInitState);
 	const [errors, setErrors] = useState<CourseErrors>(courseErrorsInitState);
 	const [author, setAuthor] = useState('');
+	const dispatch = useDispatch();
 
 	const navigate = useNavigate();
 
@@ -92,6 +96,10 @@ const CreateCourse: FC = () => {
 		alert('everything is fine');
 		authorService
 			.createAuthorBatch(course.authors)
+			.then((authors) => {
+				authors.forEach((a) => dispatch(addAuthor(a)));
+				return authors;
+			})
 			.then((authors) => authors.map((a) => a.id))
 			.then((authorIds) =>
 				courseService.createCourse({
@@ -99,6 +107,7 @@ const CreateCourse: FC = () => {
 					authors: authorIds,
 				})
 			)
+			.then((course) => dispatch(addCourse(course)))
 			.then(() => navigate('/courses'));
 	};
 
@@ -174,7 +183,7 @@ const CreateCourse: FC = () => {
 			</div>
 			<div className={'buttons'}>
 				<Button value={'cancel'} />
-				<Button value={'create course'} onClick={handleCreateCourse} />
+				<Button value={'create courses'} onClick={handleCreateCourse} />
 			</div>
 		</div>
 	);
