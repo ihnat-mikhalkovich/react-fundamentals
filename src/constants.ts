@@ -13,3 +13,6 @@ export const SEARCH_FORM_LABEL = 'Search';
 export const REGISTRATION_FORM_NAME_LABEL = 'Name';
 export const REGISTRATION_FORM_EMAIL_LABEL = 'Email';
 export const REGISTRATION_FORM_PASSWORD_LABEL = 'Password';
+
+export const CREATE_COURSE_TITLE = 'Create Course';
+export const EDIT_COURSE_TITLE = 'Edit Course';

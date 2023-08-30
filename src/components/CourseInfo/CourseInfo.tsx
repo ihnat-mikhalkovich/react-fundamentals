@@ -52,7 +52,7 @@ const CourseInfo: FC = () => {
 				</ul>
 			</div>
 
-			<Button value={<Link to={'/courses'}>{BUTTON_VALUE_BACK}</Link>} />
+			<Button component={<Link to={'/courses'}>{BUTTON_VALUE_BACK}</Link>} />
 		</div>
 	);
 };

@@ -13,7 +13,7 @@ const AuthorItem: FC<AuthorItemProps> = (props: AuthorItemProps) => {
 		<div className={'author-item'}>
 			<span>{props.authorName}</span>
 			<span>+</span>
-			<Button value={<DeleteIcon />} onClick={props.onDelete} />
+			<Button component={<DeleteIcon />} onClick={props.onDelete} />
 		</div>
 	);
 };

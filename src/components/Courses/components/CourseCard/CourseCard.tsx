@@ -3,12 +3,15 @@ import Button from 'src/common/Button/Button';
 import { ReactComponent as EditIcon } from './edit.svg';
 import { ReactComponent as RemoveIcon } from './remove.svg';
 import {
-	BUTTON_VALUE_SHOW_COURSE,
 	ALERT_BUTTON_DONT_WORK,
+	BUTTON_VALUE_SHOW_COURSE,
 } from 'src/constants';
 import './styles.scss';
-import { useDispatch } from 'react-redux';
 import { deleteCourse } from '../../../../store/courses/coursesSlice';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { deleteCourseThunk } from '../../../../store/courses/thunk';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { forAdminView } from '../../../../common/ForRole/ForRole';
 
 export interface CourseCardProps {
 	id: string;
@@ -20,10 +23,22 @@ export interface CourseCardProps {
 	onShowCourseClick: () => void;
 }
 
+const adminButtons = (onDelete, navigate, courseId) => (
+	<>
+		<Button onClick={onDelete} component={<RemoveIcon />} />
+		<Button
+			onClick={() => navigate(`/courses/${courseId}/update`)}
+			component={<EditIcon />}
+		/>
+	</>
+);
+
 const CourseCard: FC<CourseCardProps> = (props: CourseCardProps) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
+	const role = useAppSelector((state) => state.user.role);
+	const navigate = useNavigate();
 	const onDeleteClick = (courseId: string) => {
-		dispatch(deleteCourse(courseId));
+		dispatch(deleteCourseThunk(courseId));
 	};
 	return (
 		<div className='courseCard'>
@@ -32,15 +47,15 @@ const CourseCard: FC<CourseCardProps> = (props: CourseCardProps) => {
 				<p>{props.description}</p>
 				<div className='info'>
 					<ul>
-						<li key={props.id + '-authors'}>
+						<li>
 							<span>Authors: </span>
 							{props.authorsList.join(', ')}
 						</li>
-						<li key={props.id + '-duration'}>
+						<li>
 							<span>Duration: </span>
 							{props.duration}
 						</li>
-						<li key={props.id + '-creationDate'}>
+						<li>
 							<span>Created: </span>
 							{props.creationDate}
 						</li>
@@ -48,16 +63,11 @@ const CourseCard: FC<CourseCardProps> = (props: CourseCardProps) => {
 					<div className='buttons'>
 						<Button
 							onClick={props.onShowCourseClick}
-							value={BUTTON_VALUE_SHOW_COURSE}
+							component={BUTTON_VALUE_SHOW_COURSE}
 						/>
-						<Button
-							onClick={() => onDeleteClick(props.id)}
-							value={<RemoveIcon />}
-						/>
-						<Button
-							onClick={() => alert(ALERT_BUTTON_DONT_WORK)}
-							value={<EditIcon />}
-						/>
+						{forAdminView(
+							adminButtons(() => onDeleteClick(props.id), navigate, props.id)
+						)}
 					</div>
 				</div>
 			</div>

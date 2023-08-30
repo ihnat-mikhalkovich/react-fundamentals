@@ -9,12 +9,18 @@ const userSlice = createSlice({
 	reducers: {
 		login: (
 			state,
-			action: PayloadAction<{ name: string; email: string; token: string }>
+			action: PayloadAction<{
+				name: string;
+				email: string;
+				token: string;
+				role: string;
+			}>
 		) => {
 			state.isAuth = true;
 			state.email = action.payload.email;
 			state.name = action.payload.name;
 			state.token = action.payload.token;
+			state.role = action.payload.role;
 		},
 		logout: () => {
 			return initialState;

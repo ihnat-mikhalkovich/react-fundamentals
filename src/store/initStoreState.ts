@@ -14,6 +14,7 @@ const initStoreState: Store = {
 		name: '',
 		email: '',
 		token: '',
+		role: '',
 	},
 	courses: [],
 	authors: [],

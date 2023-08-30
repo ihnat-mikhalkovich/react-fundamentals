@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import initStoreState from '../initStoreState';
 import Course from '../../types/Course';
+import { searchByNameOrByIdPredicate } from '../../components/Courses/utils';
 
 interface CoursesState {
 	courses: Course[];
@@ -26,6 +27,10 @@ const coursesSlice = createSlice({
 		},
 	},
 });
+
+export const selectByNameOrByIdPredicate = (state, search) => {
+	return state.courses.courses.filter(searchByNameOrByIdPredicate(search));
+};
 
 export const { addCourse, saveCourses, deleteCourse } = coursesSlice.actions;
 export default coursesSlice.reducer;
