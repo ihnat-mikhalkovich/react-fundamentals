@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from 'react';
+import React, { ChangeEvent, FC, useEffect, useState } from 'react';
 import Input from '../../common/Input/Input';
 import './styles.scss';
 import Textarea from '../../common/Textarea/Textarea';
@@ -8,13 +8,16 @@ import Course from '../../types/Course';
 import { onInputChange, onTextareaChange } from '../../helpers/onInputChange';
 import getCourseDuration from '../../helpers/getCourseDuration';
 import { hasErrors, validateCourse } from '../../helpers/validation';
-import errorMessagesIfPresent from '../../helpers/errorMessagesIfPresent';
+import ErrorMessagesIfPresent from '../../common/ErrorMessage/ErrorMessagesIfPresent';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks';
+import {
+	createAuthorsAndCourseThunk,
+	createAuthorsAndUpdateCourseThunk,
+} from '../../store/courses/thunk';
 import courseService from '../../services/courseService';
+import { CREATE_COURSE_TITLE, EDIT_COURSE_TITLE } from '../../constants';
 import authorService from '../../services/authorService';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { addCourse } from '../../store/courses/coursesSlice';
-import { addAuthor } from '../../store/authors/authorsSlice';
 
 interface CourseErrors {
 	title: string[];
@@ -39,13 +42,38 @@ const courseInitState: Course = {
 	authors: [],
 };
 
-const CreateCourse: FC = () => {
+const CourseForm: FC = () => {
 	const [course, setCourse] = useState<Course>(courseInitState);
 	const [errors, setErrors] = useState<CourseErrors>(courseErrorsInitState);
 	const [author, setAuthor] = useState('');
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
+
+	const { courseId } = useParams();
 
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (!courseId) {
+			return;
+		}
+		const fetchCourse = async () => {
+			try {
+				const c = await courseService.getCourseById(courseId);
+				const fetchAuthors = async () => {
+					const map = c.authors.map((id) =>
+						authorService.getAuthorById(id).then((a) => a.name)
+					);
+					const names = await Promise.all(map);
+					c.authors = names;
+					setCourse(c);
+				};
+				fetchAuthors();
+			} catch (e) {
+				navigate('/');
+			}
+		};
+		fetchCourse();
+	}, [courseId]);
 
 	const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		onInputChange(course, setCourse)(e);
@@ -93,27 +121,41 @@ const CreateCourse: FC = () => {
 			console.log(e);
 			return;
 		}
-		alert('everything is fine');
-		authorService
-			.createAuthorBatch(course.authors)
-			.then((authors) => {
-				authors.forEach((a) => dispatch(addAuthor(a)));
-				return authors;
-			})
-			.then((authors) => authors.map((a) => a.id))
-			.then((authorIds) =>
-				courseService.createCourse({
-					...course,
-					authors: authorIds,
-				})
-			)
-			.then((course) => dispatch(addCourse(course)))
-			.then(() => navigate('/courses'));
+		const createAuthorsAndCourse = async () => {
+			try {
+				await dispatch(createAuthorsAndCourseThunk(course.authors, course));
+				navigate('/courses');
+			} catch (e) {
+				console.log(e);
+				alert('i cant save the course, check console');
+			}
+		};
+		createAuthorsAndCourse();
+	};
+
+	const handleEditCourse = () => {
+		const e = validateForm();
+		if (hasErrors(e)) {
+			console.log(e);
+			return;
+		}
+		const createAuthorsAndUpdateCourse = async () => {
+			try {
+				await dispatch(
+					createAuthorsAndUpdateCourseThunk(course.authors, course)
+				);
+				navigate('/courses');
+			} catch (e) {
+				console.log(e);
+				alert('i cant update the course, check console');
+			}
+		};
+		createAuthorsAndUpdateCourse();
 	};
 
 	return (
 		<div className={'course-container'}>
-			<h1>Create Course</h1>
+			<h1>{courseId ? EDIT_COURSE_TITLE : CREATE_COURSE_TITLE}</h1>
 			<div className={'course-info'}>
 				<div className={'create-course-form'}>
 					<div className={'main-info-container'}>
@@ -124,13 +166,13 @@ const CreateCourse: FC = () => {
 							onChange={handleInputChange}
 							type={'text'}
 						/>
-						{errorMessagesIfPresent(errors.title)}
+						{ErrorMessagesIfPresent(errors.title)}
 						<Textarea
 							label={'Description'}
 							value={course.description}
 							onChange={handleTextareaChange}
 						/>
-						{errorMessagesIfPresent(errors.description)}
+						{ErrorMessagesIfPresent(errors.description)}
 					</div>
 					<div className={'duration-and-authors'}>
 						<div className={'duration'}>
@@ -147,7 +189,7 @@ const CreateCourse: FC = () => {
 								</span>
 							</div>
 						</div>
-						{errorMessagesIfPresent(errors.duration)}
+						{ErrorMessagesIfPresent(errors.duration)}
 						<div className={'authors'}>
 							<h2>Authors</h2>
 							<form
@@ -160,9 +202,9 @@ const CreateCourse: FC = () => {
 									onChange={handleAuthorChange}
 									type={'text'}
 								/>
-								<Button value={'Authors'} />
+								<Button component={'Authors'} />
 							</form>
-							{errorMessagesIfPresent(errors.authors)}
+							{ErrorMessagesIfPresent(errors.authors)}
 							{!!course.authors.length && (
 								<div className={'author-list'}>
 									<h3>Author List</h3>
@@ -182,11 +224,15 @@ const CreateCourse: FC = () => {
 				</div>
 			</div>
 			<div className={'buttons'}>
-				<Button value={'cancel'} />
-				<Button value={'create courses'} onClick={handleCreateCourse} />
+				<Button component={'cancel'} onClick={() => navigate('/')} />
+				{courseId ? (
+					<Button component={'edit course'} onClick={handleEditCourse} />
+				) : (
+					<Button component={'create course'} onClick={handleCreateCourse} />
+				)}
 			</div>
 		</div>
 	);
 };
 
-export default CreateCourse;
+export default CourseForm;

@@ -37,7 +37,7 @@ const SearchBar: FC<SearchBarProps> = (props: SearchBarProps) => {
 				onChange={handleOnChange}
 				value={props.value}
 			/>
-			<Button value={BUTTON_VALUE_SEARCH} onClick={handleClick} />
+			<Button component={BUTTON_VALUE_SEARCH} onClick={handleClick} />
 		</form>
 	);
 };

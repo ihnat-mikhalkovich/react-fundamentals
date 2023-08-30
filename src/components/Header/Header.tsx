@@ -1,35 +1,43 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import Logo from './components/logo/Logo';
 import Button from 'src/common/Button/Button';
 import './header.scss';
 import { BUTTON_VALUE_LOGIN, BUTTON_VALUE_LOGOUT } from 'src/constants';
-import { AuthContext } from '../../App';
 import { NavigateFunction, useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootType } from '../../store/rootReducer';
+import { useAppDispatch } from '../../hooks';
+import { logoutThunk } from '../../store/user/thunk';
 
 const userAuthenticatedHeader = (username: string, logout: () => void) => (
 	<>
 		<span>{username}</span>
-		<Button onClick={logout} value={BUTTON_VALUE_LOGOUT} />
+		<Button onClick={logout} component={BUTTON_VALUE_LOGOUT} />
 	</>
 );
 
 const userNotAuthenticatedHeader = (login: () => void) => (
 	<>
-		<Button onClick={login} value={BUTTON_VALUE_LOGIN} />
+		<Button onClick={login} component={BUTTON_VALUE_LOGIN} />
 	</>
 );
 
 const isLoginOrRegistration = (pathname: string) =>
-	pathname === '/login' || pathname === '/registration';
+	['/login', '/registration'].includes(pathname);
 
 const redirectAfterLogin = (navigate: NavigateFunction): void =>
 	navigate('/login');
 
+const onLogoutClick = (dispatch) => {
+	dispatch(logoutThunk());
+	localStorage.clear();
+};
+
 const Header: FC = () => {
-	const { isUserAuthenticated, username, onLogoutClick } =
-		useContext(AuthContext);
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { isAuth, name } = useSelector((state: RootType) => state.user);
+	const dispatch = useAppDispatch();
 	return (
 		<div className='header'>
 			<div>
@@ -37,8 +45,8 @@ const Header: FC = () => {
 			</div>
 			<div className='navbar'>
 				{!isLoginOrRegistration(location.pathname) &&
-					(isUserAuthenticated
-						? userAuthenticatedHeader(username, onLogoutClick)
+					(isAuth
+						? userAuthenticatedHeader(name, () => onLogoutClick(dispatch))
 						: userNotAuthenticatedHeader(() => redirectAfterLogin(navigate)))}
 			</div>
 		</div>

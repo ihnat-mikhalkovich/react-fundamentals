@@ -4,48 +4,41 @@ import SearchBar from './components/SearchBar/SearchBar';
 import Button from 'src/common/Button/Button';
 import './styles.scss';
 import { BUTTON_VALUE_ADD_NEW_COURSE } from 'src/constants';
-import mapCoursesToCourseCardProps, {
-	searchByNameOrByIdPredicate,
-} from './utils';
+import mapCoursesToCourseCardProps from './utils';
 import { useNavigate } from 'react-router-dom';
 import EmptyCourseList from '../EmptyCourseList/EmptyCourseList';
-import courseService from '../../services/courseService';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootType } from '../../store/rootReducer';
-import { saveCourses } from '../../store/courses/coursesSlice';
-import authorService from '../../services/authorService';
-import { saveAuthors } from '../../store/authors/authorsSlice';
+import { getCourses } from '../../store/courses/thunk';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getAuthors } from '../../store/authors/thunk';
+import { selectByNameOrByIdPredicate } from '../../store/courses/coursesSlice';
+import { forAdminView } from '../../common/ForRole/ForRole';
 
 const Courses: FC = () => {
 	const [search, setSearch] = useState('');
-	const courses = useSelector((state: RootType) => state.courses.courses);
-	const authors = useSelector((state: RootType) => state.authors.authors);
-	const [filteredCourses, setFilteredCourses] = useState(courses);
+	const [currentSearch, setCurrentSearch] = useState('');
+	const courses = useAppSelector((state) =>
+		selectByNameOrByIdPredicate(state, currentSearch)
+	);
+	const authors = useAppSelector((state: RootType) => state.authors.authors);
 	const navigate = useNavigate();
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		Promise.all([courseService.findAll(), authorService.findAll()])
-			.then(([courseItems, authorItems]) => {
-				dispatch(saveCourses(courseItems));
-				dispatch(saveAuthors(authorItems));
-			})
-			.catch(() => {
-				console.log('Failed to fetch data');
-			});
+		const fetchData = async () => {
+			await dispatch(getAuthors());
+			dispatch(getCourses());
+		};
+		fetchData();
 	}, [dispatch]);
-
-	useEffect(() => {
-		setFilteredCourses(courses);
-	}, [courses]);
 
 	if (!courses.length) {
 		return <EmptyCourseList />;
 	}
 
 	const handleSubmit = () => {
-		setFilteredCourses(courses.filter(searchByNameOrByIdPredicate(search)));
+		setCurrentSearch(search);
 	};
 
 	const handleOnChange = (inputValue: string) => {
@@ -60,14 +53,17 @@ const Courses: FC = () => {
 					onSubmit={handleSubmit}
 					onChange={handleOnChange}
 				/>
-				<Button
-					value={BUTTON_VALUE_ADD_NEW_COURSE}
-					onClick={() => navigate('/courses/add')}
-				/>
+				{forAdminView(
+					<Button
+						component={BUTTON_VALUE_ADD_NEW_COURSE}
+						onClick={() => navigate('/courses/add')}
+					/>
+				)}
 			</div>
 			<div className='cards'>
-				{mapCoursesToCourseCardProps(filteredCourses, authors).map((c) => (
+				{mapCoursesToCourseCardProps(courses, authors).map((c) => (
 					<CourseCard
+						key={c.id}
 						{...c}
 						onShowCourseClick={() => navigate(`/courses/${c.id}`)}
 					/>

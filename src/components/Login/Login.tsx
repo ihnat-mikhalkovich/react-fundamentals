@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useContext, useState } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import userService, { LoginData } from '../../services/userService';
 import Input from '../../common/Input/Input';
 import {
@@ -10,10 +10,9 @@ import Button from '../../common/Button/Button';
 import { onInputChange } from '../../helpers/onInputChange';
 import { validateUser } from '../../helpers/validation';
 import getInputClassName from '../../helpers/getInputClassName';
-import errorMessagesIfPresent from '../../helpers/errorMessagesIfPresent';
+import ErrorMessagesIfPresent from '../../common/ErrorMessage/ErrorMessagesIfPresent';
 import './styles.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../App';
 import { useDispatch } from 'react-redux';
 import { login } from '../../store/user/userSlice';
 
@@ -51,8 +50,6 @@ const Login: FC = () => {
 	const [errors, setErrors] = useState<LoginErrors>(loginErrorsInitState);
 	const dispatch = useDispatch();
 
-	const authContext = useContext(AuthContext);
-
 	const navigate = useNavigate();
 
 	const handleFieldChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,27 +62,24 @@ const Login: FC = () => {
 		e.preventDefault();
 		const hasError = handleClick();
 		if (!hasError) {
-			userService
-				.login(formData)
-				.then((user) => {
-					dispatch(login({ ...user }));
-					return user;
-				})
-				.then((user) => {
-					if (user.isAuth) {
-						localStorage.setItem('token', user.token);
-						localStorage.setItem('username', user.name);
-					}
-				})
-				.then(() => {
-					userService.me();
-					authContext.onLoginClick();
+			const doLogin = async () => {
+				try {
+					const loggedUser = await userService.login(formData);
+
+					if (loggedUser.isAuth)
+						localStorage.setItem('token', loggedUser.token);
+
+					const currentUser = await userService.me();
+
+					dispatch(login(currentUser));
+
 					navigate('/courses');
-				})
-				.catch((e) => {
+				} catch (e) {
 					alert('backend dont work, error in console');
 					console.log(e);
-				});
+				}
+			};
+			doLogin();
 		}
 	};
 
@@ -99,7 +93,7 @@ const Login: FC = () => {
 					onChange={handleFieldChange}
 					className={getInputClassName(errors.email)}
 				/>
-				{errorMessagesIfPresent(errors.email)}
+				{ErrorMessagesIfPresent(errors.email)}
 				<Input
 					type='password'
 					label={REGISTRATION_FORM_PASSWORD_LABEL}
@@ -107,8 +101,8 @@ const Login: FC = () => {
 					onChange={handleFieldChange}
 					className={getInputClassName(errors.password)}
 				/>
-				{errorMessagesIfPresent(errors.password)}
-				<Button value={BUTTON_VALUE_LOGIN} onClick={handleClick} />
+				{ErrorMessagesIfPresent(errors.password)}
+				<Button component={BUTTON_VALUE_LOGIN} onClick={handleClick} />
 				<p>
 					If you have an account you may{' '}
 					<Link to={'/registration'}>

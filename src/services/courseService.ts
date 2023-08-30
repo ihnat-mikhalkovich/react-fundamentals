@@ -9,10 +9,16 @@ interface CourseResponse<T> {
 
 class CourseService {
 	constructor(private axios: AxiosInstance) {}
+
 	async createCourse(course: Course): Promise<Course> {
-		const response = await axiosInstance.post<CourseResponse<Course>>(
+		const response = await this.axios.post<CourseResponse<Course>>(
 			`/courses/add`,
-			course,
+			{
+				title: course.title,
+				description: course.description,
+				authors: course.authors,
+				duration: Number(course.duration),
+			},
 			{
 				headers: {
 					Authorization: localStorage.getItem('token'),
@@ -21,16 +27,44 @@ class CourseService {
 		);
 		return response.data.result;
 	}
+
 	async getCourseById(courseId: string): Promise<Course> {
-		const response = await axiosInstance.get<CourseResponse<Course>>(
+		const response = await this.axios.get<CourseResponse<Course>>(
 			`/courses/${courseId}`
 		);
 		return response.data.result;
 	}
 
 	async findAll(): Promise<Course[]> {
-		const response = await axiosInstance.get<CourseResponse<Course[]>>(
+		const response = await this.axios.get<CourseResponse<Course[]>>(
 			'/courses/all'
+		);
+		return response.data.result;
+	}
+
+	async delete(courseId: string) {
+		await this.axios.delete(`/courses/${courseId}`, {
+			headers: {
+				Authorization: localStorage.getItem('token'),
+			},
+		});
+	}
+
+	async update(course: Course) {
+		const data = {
+			title: course.title,
+			description: course.description,
+			authors: course.authors,
+			duration: Number(course.duration),
+		};
+		const response = await this.axios.put<CourseResponse<Course>>(
+			`/courses/${course.id}`,
+			data,
+			{
+				headers: {
+					Authorization: localStorage.getItem('token'),
+				},
+			}
 		);
 		return response.data.result;
 	}

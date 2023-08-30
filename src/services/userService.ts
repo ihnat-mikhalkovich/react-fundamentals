@@ -33,14 +33,19 @@ class UserService {
 	constructor(private axios: AxiosInstance) {}
 
 	async register(data: RegistrationData): Promise<boolean> {
-		await this.axios.post('/register', data);
-		return new Promise(() => true);
+		try {
+			await this.axios.post('/register', data);
+		} catch (e) {
+			return false;
+		}
+		return true;
 	}
 
 	async login(data: LoginData): Promise<User> {
 		const response = await this.axios.post<LoginResponse>('/login', data);
 		const loginResponse = response.data;
 		return {
+			role: '',
 			email: loginResponse.user.email,
 			name: loginResponse.user.name,
 			token: loginResponse.result,
@@ -48,15 +53,31 @@ class UserService {
 		};
 	}
 
-	async me(): Promise<UserResponse> {
+	async logout(): Promise<void> {
+		const token = localStorage.getItem('token');
+		await this.axios.delete('/logout', {
+			headers: {
+				Authorization: token,
+			},
+		});
+	}
+
+	async me(): Promise<User> {
+		const token = localStorage.getItem('token');
 		const response = await this.axios.get<MeResponse>('/users/me', {
 			headers: {
-				Authorization: localStorage.getItem('token'),
+				Authorization: token,
 			},
 		});
 		const user = response.data.result;
-		localStorage.setItem('role', user.role);
-		return user;
+
+		return {
+			name: user.name,
+			email: user.email,
+			token: token,
+			isAuth: true,
+			role: user.role,
+		};
 	}
 }
 

@@ -10,7 +10,7 @@ import Button from '../../common/Button/Button';
 import './styles.scss';
 import userService from 'src/services/userService';
 import getInputClassName from '../../helpers/getInputClassName';
-import errorMessagesIfPresent from '../../helpers/errorMessagesIfPresent';
+import ErrorMessagesIfPresent from '../../common/ErrorMessage/ErrorMessagesIfPresent';
 import { validateUser } from '../../helpers/validation';
 import { onInputChange } from '../../helpers/onInputChange';
 import { Link, useNavigate } from 'react-router-dom';
@@ -69,13 +69,16 @@ const Registration: FC = () => {
 		e.preventDefault();
 		const hasError = handleClick();
 		if (hasError) return;
-		userService
-			.register({ ...formData })
-			.then(() => navigate('/login'))
-			.catch((e) => {
+		const doRegistration = async () => {
+			try {
+				await userService.register({ ...formData });
+				navigate('/login');
+			} catch (e) {
 				console.log(e);
 				alert('backend dont, u can find the error in console');
-			});
+			}
+		};
+		doRegistration();
 	};
 
 	return (
@@ -88,7 +91,7 @@ const Registration: FC = () => {
 					onChange={handleFieldChange}
 					className={getInputClassName(errors.name)}
 				/>
-				{errorMessagesIfPresent(errors.name)}
+				{ErrorMessagesIfPresent(errors.name)}
 				<Input
 					type='email'
 					label={REGISTRATION_FORM_EMAIL_LABEL}
@@ -96,7 +99,7 @@ const Registration: FC = () => {
 					onChange={handleFieldChange}
 					className={getInputClassName(errors.email)}
 				/>
-				{errorMessagesIfPresent(errors.email)}
+				{ErrorMessagesIfPresent(errors.email)}
 				<Input
 					type='password'
 					label={REGISTRATION_FORM_PASSWORD_LABEL}
@@ -104,8 +107,8 @@ const Registration: FC = () => {
 					onChange={handleFieldChange}
 					className={getInputClassName(errors.password)}
 				/>
-				{errorMessagesIfPresent(errors.password)}
-				<Button value={BUTTON_VALUE_LOGIN} onClick={handleClick} />
+				{ErrorMessagesIfPresent(errors.password)}
+				<Button component={BUTTON_VALUE_LOGIN} onClick={handleClick} />
 				<p>
 					If you have an account you may{' '}
 					<Link to={'/login'}>
